@@ -36,18 +36,22 @@ const mcon = io.of("/my-connection");
 
 mcon.on("connection", async (socket) => {
   logger.info("user connected");
-  // console.log("socket===", socket);
 
   const userId = socket.handshake.auth.userId;
   logger.info(`User authenticated with TOKEN: ${userId}`);
-  // await User.findByIdAndUpdate({ _id: userId }, { $set: { is_online: "1" } });
   await User.findByIdAndUpdate(userId, { $set: { is_online: "1" } });
+
+  // online status
+  socket.broadcast.emit("getOnlineUser", { user_id: userId });
 
   socket.on("disconnect", async () => {
     logger.info("user disconnected");
 
     await User.findByIdAndUpdate(userId, { $set: { is_online: "0" } });
     logger.info(`User status updated to offline for userId: ${userId}`);
+
+    // offline status
+    socket.broadcast.emit("getOfflineUser", { user_id: userId });
   });
 });
 

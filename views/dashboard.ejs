@@ -8,7 +8,7 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-md-3 card">
+                <div class="col-md-4 card">
                     <div class="card-body">
 
                         <ul class="list-group">
@@ -17,9 +17,14 @@
 
                                     <a href="#"
                                         class="user-list list-group-item list-group-item-action list-group-dark">
-                                        <img class="rounded-circle border" src="<%= users[i].image %>" width="20px">
+                                        <img class="rounded-circle border" src="<%= users[i]['image'] %>" width="20px">
                                         <span class="px-1">
-                                            <%= users[i].name %>
+                                            <%= users[i]['name'] %>
+
+                                                <sup class="<%= users[i]['is_online'] === '1' ? 'text-success' : 'text-danger' %>"
+                                                    id="<%= users[i]._id %>-status">
+                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                </sup>
                                         </span>
                                     </a>
 
@@ -32,7 +37,7 @@
                     </div>
 
                 </div>
-                <div class="col-md-9 card">
+                <div class="col-md-8 card">
                     <div class="card-body">
                         <h3 class="start-head">Click to start chat</h3>
                         <div class="chat-section">
@@ -59,7 +64,7 @@
     </div>
 
 
-   
+
 
 
 

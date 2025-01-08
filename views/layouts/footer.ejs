@@ -15,9 +15,6 @@
     });
 </script>
 <script>
-
-
-
     $(document).ready(function () {
 
         $('.user-list').click(function () {
@@ -27,6 +24,21 @@
 
         });
 
+    });
+
+    // update user online status
+    socket.on('getOnlineUser', (data) => {
+
+        $('#' + data.user_id + '-status').removeClass('text-danger');
+        $('#' + data.user_id + '-status').addClass('text-success');
+
+    });
+
+    // update user offline status
+    socket.on('getOfflineUser', (data) => {
+
+        $('#' + data.user_id + '-status').removeClass('text-success');
+        $('#' + data.user_id + '-status').addClass('text-danger');
 
     });
 </script>
