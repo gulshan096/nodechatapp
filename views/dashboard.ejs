@@ -1,0 +1,66 @@
+<%- include('layouts/header.ejs') %>
+
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h3 class="mb-4 container bg-primary text-white p-2">Hii <%= user.name %>
+        </h3>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 card">
+                    <div class="card-body">
+
+                        <ul class="list-group">
+                            <% if(users.length> 0){
+                                for(let i=0; i < users.length; i++ ){ %>
+
+                                    <a href="#"
+                                        class="user-list list-group-item list-group-item-action list-group-dark">
+                                        <img class="rounded-circle border" src="<%= users[i].image %>" width="20px">
+                                        <span class="px-1">
+                                            <%= users[i].name %>
+                                        </span>
+                                    </a>
+
+
+
+                                    <% } } %>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div class="col-md-9 card">
+                    <div class="card-body">
+                        <h3 class="start-head">Click to start chat</h3>
+                        <div class="chat-section">
+                            <div id="chat-container">
+
+                            </div>
+
+                            <form action="" id="chat-form">
+                                <div class="d-flex mt-3">
+                                    <input placeholder="Type....." type="text" class="form-control" name="message"
+                                        id="message" required>
+                                    <input type="submit" value="send" class="btn btn-primary">
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+   
+
+
+
+    <%- include('layouts/footer.ejs') %>
