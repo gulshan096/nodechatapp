@@ -16,6 +16,7 @@ import {
   userLogout,
   userRegister,
   userRegisterLoad,
+  saveChat,
 } from "../controllers/userController.js";
 
 const route = express.Router();
@@ -40,6 +41,8 @@ route.post("/login", userLogin);
 
 route.get("/logout", isLogin, userLogout);
 route.get("/dashboard", isLogin, userDashboard);
+
+route.post("/saveChat", isLogin, saveChat);
 
 route.get("*", function (req, res) {
   res.redirect("/");

@@ -15,8 +15,8 @@
                             <% if(users.length> 0){
                                 for(let i=0; i < users.length; i++ ){ %>
 
-                                    <a href="#"
-                                        class="user-list list-group-item list-group-item-action list-group-dark">
+                                    <a href="#" class="user-list list-group-item list-group-item-action list-group-dark"
+                                        data-id="<%=users[i]['_id']%>">
                                         <img class="rounded-circle border" src="<%= users[i]['image'] %>" width="20px">
                                         <span class="px-1">
                                             <%= users[i]['name'] %>
@@ -41,7 +41,8 @@
                     <div class="card-body">
                         <h3 class="start-head">Click to start chat</h3>
                         <div class="chat-section">
-                            <div id="chat-container">
+                            <div id="chat-container" class="d-flex flex-column">
+
 
                             </div>
 

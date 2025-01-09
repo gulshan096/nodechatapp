@@ -1,10 +1,32 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
+import Chat from "../models/chatModel.js";
 import logger from "../logger.js";
+
+export const saveChat = async (req, res) => {
+  try {
+    logger.info("charRequset  :", req.body);
+    const { sender_id, receiver_id, message } = req.body;
+
+    const chat = new Chat({
+      sender_id: sender_id,
+      receiver_id: receiver_id,
+      message: message,
+    });
+
+    const newChat = await chat.save();
+    res
+      .status(200)
+      .send({ success: true, msg: "chat inserted", data: newChat });
+  } catch (error) {
+    logger.info("error", error.message);
+    res.status(400).send({ success: false, msg: error.message });
+  }
+};
 
 export const userRegister = async (req, res) => {
   try {
-    console.log("loginRequset===>", req.body);
+    console.info("loginRequset===>", req.body);
     logger.info("requestBody", JSON.stringify(req.body));
     const { name, email, password } = req.body;
 
@@ -19,9 +41,13 @@ export const userRegister = async (req, res) => {
 
     const result = await user.save();
 
-    res.render("register", { message: "user has been register successfully." });
+    res.render("register", {
+      success: true,
+      message: "user has been register successfully.",
+    });
   } catch (error) {
     logger.info("error", error);
+    res.status(400).send({ success: false, msg: error.message });
   }
 };
 
@@ -70,6 +96,7 @@ export const userDashboard = async (req, res) => {
     res.render("dashboard", { user: req.session.user, users: users });
   } catch (error) {
     logger.info("error", error);
+    res.status(400).send({ success: false, msg: error.message });
   }
 };
 
@@ -79,5 +106,6 @@ export const userLogout = async (req, res) => {
     res.redirect("/login");
   } catch (error) {
     logger.info("error", error);
+    res.status(400).send({ success: false, msg: error.message });
   }
 };

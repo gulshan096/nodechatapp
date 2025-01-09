@@ -2,14 +2,18 @@
 
 
 
-<script src="js/jquery.min.js"></script>
+<!-- <script src="js/jquery.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+    var sender_id = '<%= user._id %>';
+    var receiver_id;
+
     var socket = io('/my-connection', {
         auth: { userId: '<%= user._id %>' }
     });
@@ -19,8 +23,12 @@
 
         $('.user-list').click(function () {
 
+            receiver_id = $(this).attr('data-id');
+
             $('.start-head').hide();
             $('.chat-section').show();
+
+            socket.emit('existChat', { sender_id: sender_id, receiver_id: receiver_id });
 
         });
 
@@ -41,6 +49,106 @@
         $('#' + data.user_id + '-status').addClass('text-danger');
 
     });
+
+
+    $("#chat-form").submit(function (event) {
+
+        event.preventDefault();
+
+        var message = $('#message').val();
+
+        $.ajax({
+            url: '/saveChat',
+            type: 'POST',
+            data: { sender_id: sender_id, receiver_id: receiver_id, message: message },
+            success: function (response) {
+
+                if (response.success) {
+
+
+
+                    console.log(response);
+
+                    $('#message').val('');
+                    let chat = response.data.message;
+
+                    let html = `
+                        <div class='current-user-chat text-right mx-2 p-2'>
+                            <h5>`+ chat + `</h5>
+                        </div>
+                        `;
+                    $("#chat-container").append(html);
+                    socket.emit('newChat', response.data);
+                    scrollChat();
+                } else {
+                    console.log(response.msg);
+
+                }
+
+            }
+        })
+
+    });
+
+    // distance user chat
+    socket.on('loadNewChat', (data) => {
+        if (sender_id == data.receiver_id && receiver_id == data.sender_id) {
+
+            let chat = data.message;
+            let html = `
+                    <div class='distance-user-chat mx-2 p-2'>
+                       <h5>`+ chat + `</h5>
+                    </div>
+                    `;
+            $("#chat-container").append(html);
+            scrollChat();
+
+        }
+
+    });
+
+    // load old chat
+
+    socket.on('loadOldChats', (data) => {
+
+        $("#chat-container").html('');
+
+        var chats = data.chats;
+
+        let html = '';
+        for (let x = 0; x < chats.length; x++) {
+
+            let addClass = '';
+
+            if (chats[x]['sender_id'] == sender_id) {
+
+                addClass = 'current-user-chat text-right mx-2 p-2'
+
+            } else {
+                addClass = 'distance-user-chat mx-2 p-2'
+
+            }
+
+            html += `
+
+            <div class='`+ addClass + `'>
+                <h5>`+ chats[x]['message'] + `</h5>
+            </div>
+            `;
+        }
+        $("#chat-container").append(html);
+
+        scrollChat();
+
+    });
+
+    function scrollChat() {
+        $('#chat-container').animate({
+
+            scrollTop: $('#chat-container').offset().top + $('#chat-container')[0].scrollHeight
+
+        }, 0);
+    }
 </script>
 </body>
 

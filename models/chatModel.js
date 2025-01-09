@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const chatSchema = mongoose.Schema(
   {
-    sender_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    receiver_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    sender_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    receiver_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     message: { type: String, required: true },
   },
   {
@@ -11,5 +11,4 @@ const chatSchema = mongoose.Schema(
   }
 );
 
-
-export default mongoose.model('Chat',chatSchema);
+export default mongoose.model("Chat", chatSchema);

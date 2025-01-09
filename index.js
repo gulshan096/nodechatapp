@@ -9,6 +9,7 @@ import path from "path";
 import logger from "./logger.js";
 import { Server } from "socket.io";
 import User from "./models/userModel.js";
+import Chat from "./models/chatModel.js";
 
 dotenv.config();
 const app = express();
@@ -52,6 +53,25 @@ mcon.on("connection", async (socket) => {
 
     // offline status
     socket.broadcast.emit("getOfflineUser", { user_id: userId });
+  });
+
+  // chat implement
+
+  socket.on("newChat", (data) => {
+    socket.broadcast.emit("loadNewChat", data);
+  });
+
+  // load Old Chats
+
+  socket.on("existChat", async (data) => {
+    var chats = await Chat.find({
+      $or: [
+        { sender_id: data.sender_id, receiver_id: data.receiver_id },
+        { sender_id: data.receiver_id, receiver_id: data.sender_id },
+      ],
+    });
+
+    socket.emit("loadOldChats", { chats: chats });
   });
 });
 
